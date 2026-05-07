@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Birthday Wonderland | For Fooqi</title>
+  <!-- Bootstrap 5 CSS + Icons + Google Fonts -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      background: #fef7e8;
+    }
+
+    /* page container */
+    .page {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+      transition: all 0.4s ease;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    /* aesthetic backgrounds */
+    .page-1 {
+      background: linear-gradient(145deg, #fff9ef 0%, #ffe6c9 100%);
+    }
+    .page-2 {
+      background: linear-gradient(125deg, #e8f0f5 0%, #fdeff2 100%);
+    }
+    .page-3 {
+      background: radial-gradient(circle at 10% 30%, #fff5e6, #ffebd2);
+    }
+
+    /* card styles with smooth transitions & hover */
+    .memory-card, .poetry-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(2px);
+      border-radius: 32px;
+      box-shadow: 0 25px 45px -12px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.4s ease;
+      overflow: hidden;
+      border: 1px solid rgba(255,215,150,0.6);
+    }
+    .memory-card:hover, .poetry-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 32px 55px -12px rgba(0,0,0,0.25);
+    }
+    .img-hover-zoom {
+      transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .memory-card:hover .img-hover-zoom {
+      transform: scale(1.03);
+    }
+    /* round images */
+    .mem-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 28px 28px 18px 18px;
+    }
+    .circle-img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #ffbc7a;
+      box-shadow: 0 8px 14px rgba(0,0,0,0.1);
+    }
+    .btn-lavender {
+      background: #ffb347;
+      color: white;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 60px;
+      border: none;
+      transition: all 0.3s;
+      box-shadow: 0 10px 20px -8px #ffb34780;
+    }
+    .btn-lavender:hover {
+      background: #ff9f1c;
+      transform: scale(1.02);
+      letter-spacing: 0.5px;
+    }
+    .gift-box {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      filter: drop-shadow(0 20px 25px rgba(0,0,0,0.2));
+    }
+    .gift-box:hover {
+      transform: scale(1.02);
+    }
+    /* floating stickers */
+    .sticker {
+      position: absolute;
+      font-size: 2.2rem;
+      opacity: 0.7;
+      animation: floatSticker 6s infinite ease-in-out;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes floatSticker {
+      0% { transform: translateY(0px) rotate(0deg);}
+      50% { transform: translateY(-15px) rotate(5deg);}
+      100% { transform: translateY(0px) rotate(0deg);}
+    }
+    /* firework/confetti style */
+    .confetti-blast {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .flower-particle {
+      position: absolute;
+      font-size: 1.8rem;
+      animation: blossom 1.2s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes blossom {
+      0% { opacity: 1; transform: scale(0.2) translate(0,0);}
+      100% { opacity: 0; transform: scale(1.5) translate(var(--tx, 0px), var(--ty, -200px));}
+    }
+    .light-burst {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: radial-gradient(circle, rgba(255,245,140,0.7) 0%, rgba(255,215,0,0) 80%);
+      animation: lightFlash 0.8s ease-out forwards;
+      pointer-events: none;
+      z-index: 9998;
+    }
+    @keyframes lightFlash {
+      0% { opacity: 0.9; transform: scale(1);}
+      100% { opacity: 0; transform: scale(2.5);}
+    }
+    /* poetry text */
+    .poetry-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: #4e3e2e;
+    }
+    h1, h2 {
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+    .gallery-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    /* navigation buttons */
+    .nav-btn {
+      background: #ffa559;
+      border: none;
+      font-weight: 500;
+      border-radius: 40px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      transition: 0.2s;
+    }
+    .nav-btn:hover {
+      background: #ff8c33;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: Poetry + Pictures of Friend + Stickers + Button -->
+  <div id="page1" class="page page-1">
+    <!-- floating stickers all around -->
+    <div class="sticker" style="top: 5%; left: 3%;">🎈🎂</div>
+    <div class="sticker" style="top: 15%; right: 2%; animation-duration: 8s;">✨🎁</div>
+    <div class="sticker" style="bottom: 12%; left: 5%; animation-duration: 7s;">🌸🎉</div>
+    <div class="sticker" style="bottom: 20%; right: 6%; animation-duration: 9s;">🍰💖</div>
+    <div class="sticker" style="top: 40%; left: 1%;">🎵🥳</div>
+    <div class="sticker" style="bottom: 35%; right: 1%;">⭐🎈</div>
+
+    <div class="container text-center">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <!-- main poetry card -->
+          <div class="poetry-card p-4 p-md-5 mb-5">
+            <i class="fas fa-feather-alt fa-2x text-warning mb-3"></i>
+            <h1 class="display-5 fw-bold" style="color:#b45f2b;">✨ Umar Farroq ✨</h1>
+            <div class="poetry-text mt-4">
+              <p class="fs-4 fst-italic">"Another trip around the sun,</p>
+              <p class="fs-4 fst-italic">A brighter star, a dance begun.</p>
+              <p class="fs-4 fst-italic">With every laugh and gentle grace,</p>
+              <p class="fs-4 fst-italic">You make the world a sweeter place."</p>
+              <hr class="w-50 mx-auto my-3" style="opacity:0.4">
+              <p class="fs-5">Your smile paints the morning sky, <br>  
+              Like golden rays, you never lie. <br>  
+              May all your dreams take joyful flight, <br>  
+              Today you glow, so pure and bright.</p>
+            </div>
+            <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
+              <!-- friend pictures inside poetry card using small circle images -->
+              <img src="assets/f1 (11).jpeg" class="circle-img" alt="friend moment" title="Janni sparkle">
+              <img src="assets/f1 (7).jpeg" class="circle-img" alt="friend smile" title="Laughs">
+              <img src="assets/f1 (4).jpeg" class="circle-img" alt="friend vibe" title="Happy soul">
+              <img src="assets/f1 (8).jpeg" class="circle-img" alt="sunset friend" title="Adventures">
+            </div>
+            <div class="mt-4 small text-muted">🌼 every moment with you is poetry 🌼</div>
+          </div>
+
+          <!-- button below poetry line to move to next page -->
+          <button id="toPage2Btn" class="btn-lavender btn px-5 py-3 fs-5"><i class="fas fa-arrow-right me-2"></i> Enter Memory Lane</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: Memory cards with friend and friends (many pictures, aesthetic transitions) -->
+  <div id="page2" class="page page-2" style="display: none;">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="display-6 fw-semibold"><i class="fas fa-camera-retro me-2"></i> Precious Frames</h2>
+        <p class="lead">Moments with me & magical circle of friends</p>
+      </div>
+      <div class="gallery-grid row g-4">
+        <!-- memory cards: me+janni + friends -->
+        <div class="col-md-6 col-lg-4">
+          <div class="memory-card h-100 p-3">
+            <img src="assets/f1 (10).jpeg" class="mem-img img-hover-zoom" alt="Memory with Janni">
+            <div class="p-3">
+              <h5 class="fw-bold">🌊 Beach Sunset & You</h5>
+              <p class="text-muted">"Laughter echoed on the shore, best times with Fooqi"</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="memory-card h-100 p-3">
+            <img src="assets/zf (2).jpeg" class="mem-img img-hover-zoom" alt="Friends trip">
+            <div class="p-3">
+              <h5 class="fw-bold">🎸 Road trip energy</h5>
+              <p class="text-muted">Fooqi & the squad — pure chaos, pure joy.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="memory-card h-100 p-3">
+            <img src="assets/f1 (5).jpeg" class="mem-img img-hover-zoom" alt="Cafe memories">
+            <div class="p-3">
+              <h5 class="fw-bold">☕ Deep talks & coffee</h5>
+              <p class="text-muted">Friends that become family. Janni in center.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="memory-card h-100 p-3">
+            <img src="assets/zf (1).jpeg" class="mem-img img-hover-zoom" alt="Birthday past">
+            <div class="p-3">
+              <h5 class="fw-bold">🎂 Fooqi&ME</h5>
+              <p class="text-muted">Nothing to describe bro, just endless friendship!</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="memory-card h-100 p-3">
+            <img src="assets/f1 (3).jpeg" class="mem-img img-hover-zoom" alt="Hiking memories">
+            <div class="p-3">
+              <h5 class="fw-bold">Fooqi with Younger bro</h5>
+              <p class="text-muted">Adventure buddy for life — Fooqi & Usman.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <div class="memory-card h-100 p-3">
+            <img src="assets/f1 (12).jpeg" class="mem-img img-hover-zoom" alt="Friends picnic">
+            <div class="p-3">
+              <h5 class="fw-bold">🧺 Picnic golden hour</h5>
+              <p class="text-muted">Friends forever, captured in light.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-5">
+        <button id="toPage3Btn" class="nav-btn btn"><i class="fas fa-gift me-2"></i> Next: The Birthday Surprise</button>
+      </div>
+      <div class="mt-4 text-center small text-secondary"><i class="fas fa-heart"></i> Every picture tells a story of friendship</div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: Gift interaction + Blow up Happy Birthday Janni & flowers + lights -->
+  <div id="page3" class="page page-3" style="display: none;">
+    <div class="container text-center">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="poetry-card p-4 p-md-5">
+            <h2 class="mb-4"><i class="fas fa-gift fa-fw"></i> A Special Gift Just For You</h2>
+            <p class="mb-4">Click on the gift box → something magical bursts!</p>
+            <div id="giftTrigger" class="gift-box d-inline-block">
+              <img src="https://cdn-icons-png.flaticon.com/512/2140/2140168.png" width="130" alt="gift" style="filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));">
+              <div class="mt-2 fw-semibold text-warning">🎀 Open Me 🎀</div>
+            </div>
+            <div id="giftMessageArea" class="mt-4" style="min-height: 80px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- confetti & explosion container -->
+  <div id="effectContainer" style="position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; z-index: 10000;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Navigation between pages with smooth transition
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const page3 = document.getElementById('page3');
+    const toPage2Btn = document.getElementById('toPage2Btn');
+    const toPage3Btn = document.getElementById('toPage3Btn');
+
+    function showPage(pageToShow) {
+      [page1, page2, page3].forEach(page => {
+        if (page) page.style.display = 'none';
+      });
+      pageToShow.style.display = 'flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    toPage2Btn.addEventListener('click', () => {
+      showPage(page2);
+    });
+
+    toPage3Btn.addEventListener('click', () => {
+      showPage(page3);
+    });
+
+    // GIFT EXPLOSION LOGIC: happy birthday janni should blow up from gift + flowers + lights
+    const giftTrigger = document.getElementById('giftTrigger');
+    const effectContainerDiv = document.getElementById('effectContainer');
+    let exploded = false;
+
+    function createFlowersAndLightsAndText() {
+      if (exploded) return;
+      exploded = true;
+      
+      // show “HAPPY BIRTHDAY JANNI” blow up message
+      const messageDiv = document.getElementById('giftMessageArea');
+      messageDiv.innerHTML = '';
+      const bigMessage = document.createElement('div');
+      bigMessage.className = 'display-5 fw-bold text-center animate__animated animate__zoomIn';
+      bigMessage.style.fontFamily = "'Playfair Display', cursive";
+      bigMessage.style.color = '#db4d3f';
+      bigMessage.style.textShadow = '2px 2px 0 #ffd966';
+      bigMessage.innerHTML = '🎂✨ HAPPY BIRTHDAY Fooqi ✨🎂';
+      messageDiv.appendChild(bigMessage);
+      
+      // additional floating note:
+      const sub = document.createElement('p');
+      sub.className = 'mt-3 fs-4 fst-italic';
+      sub.innerText = 'May your day explode with joy and love! 🌸🎈';
+      messageDiv.appendChild(sub);
+      
+      // FLOWERS & LIGHTS & CONFETTI effect
+      // flowers : using emoji / icons as petals/flowers
+      const flowerIcons = ['🌸', '🌼', '🌻', '🌺', '🌸', '💐', '🌷', '🌸', '🌼', '🌻', '🌸', '🌸', '🌼', '🌺', '🌷', '🌸'];
+      const lightIcons = ['✨', '⭐', '🌟', '💡', '✨', '⚡', '🔥', '💫', '✨'];
+      
+      // 60 elements combined
+      for (let i = 0; i < 42; i++) {
+        const isFlower = Math.random() > 0.4; // more flowers then lights? we mix both
+        let icon = isFlower ? flowerIcons[Math.floor(Math.random() * flowerIcons.length)] : lightIcons[Math.floor(Math.random() * lightIcons.length)];
+        const particle = document.createElement('div');
+        particle.className = 'flower-particle';
+        particle.style.position = 'absolute';
+        particle.style.pointerEvents = 'none';
+        particle.style.fontSize = (Math.random() * 2 + 1.2) + 'rem';
+        particle.innerHTML = icon;
+        const startX = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
+        const startY = window.innerHeight / 2 + (Math.random() - 0.5) * 150;
+        particle.style.left = startX + 'px';
+        particle.style.top = startY + 'px';
+        const tx = (Math.random() - 0.5) * 300;
+        const ty = -Math.random() * 250 - 50;
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        effectContainerDiv.appendChild(particle);
+        setTimeout(() => { particle.remove(); }, 1300);
+      }
+      
+      // 20 extra light flashes / glowing stars
+      for (let s = 0; s < 25; s++) {
+        const starLight = document.createElement('div');
+        starLight.innerHTML = Math.random() > 0.6 ? '✨' : '⭐';
+        starLight.style.position = 'absolute';
+        starLight.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+        starLight.style.left = Math.random() * window.innerWidth + 'px';
+        starLight.style.top = Math.random() * window.innerHeight + 'px';
+        starLight.style.opacity = '0.9';
+        starLight.style.animation = 'blossom 1s ease-out forwards';
+        starLight.style.pointerEvents = 'none';
+        effectContainerDiv.appendChild(starLight);
+        setTimeout(() => starLight.remove(), 1000);
+      }
+      
+      // add a big light burst on screen
+      const lightBurst = document.createElement('div');
+      lightBurst.className = 'light-burst';
+      document.body.appendChild(lightBurst);
+      setTimeout(() => lightBurst.remove(), 800);
+      
+      // add a bit of extra confetti effect using setInterval style (simple canvas not needed - using extra falling flowers)
+      for (let i = 0; i < 30; i++) {
+        const extra = document.createElement('div');
+        extra.innerHTML = ['🎉', '🎊', '🌸', '🌼', '💥', '🎈'][Math.floor(Math.random() * 6)];
+        extra.style.position = 'fixed';
+        extra.style.left = Math.random() * 100 + '%';
+        extra.style.top = '-30px';
+        extra.style.fontSize = '28px';
+        extra.style.animation = `fall ${Math.random() * 2 + 1.5}s linear forwards`;
+        extra.style.pointerEvents = 'none';
+        effectContainerDiv.appendChild(extra);
+        setTimeout(() => extra.remove(), 3000);
+      }
+      
+      // change gift image to opened / exploding state (visual)
+      const giftImg = giftTrigger.querySelector('img');
+      if (giftImg) {
+        giftImg.src = "https://cdn-icons-png.flaticon.com/512/1641/1641145.png";
+        giftImg.style.transform = "scale(1.1)";
+      }
+      // disable multiple clicks
+      giftTrigger.style.cursor = "default";
+      giftTrigger.style.opacity = "0.9";
+      
+      // also inserting floating lights effect throughout the page for 3 seconds
+      let intervalFlash = setInterval(() => {
+        const flashDiv = document.createElement('div');
+        flashDiv.style.position = 'absolute';
+        flashDiv.style.width = '60px';
+        flashDiv.style.height = '60px';
+        flashDiv.style.borderRadius = '50%';
+        flashDiv.style.background = `radial-gradient(circle, rgba(255,200,100,0.8) 0%, rgba(255,80,40,0) 80%)`;
+        flashDiv.style.left = Math.random() * window.innerWidth + 'px';
+        flashDiv.style.top = Math.random() * window.innerHeight + 'px';
+        flashDiv.style.animation = 'lightFlash 0.7s ease-out forwards';
+        flashDiv.style.pointerEvents = 'none';
+        document.body.appendChild(flashDiv);
+        setTimeout(() => flashDiv.remove(), 700);
+      }, 200);
+      setTimeout(() => clearInterval(intervalFlash), 1800);
+      
+      // additional pop of "HAPPY BIRTHDAY JANNI" text with blow up size
+      const blowText = document.createElement('div');
+      blowText.innerText = '🎁💥 HAPPY BIRTHDAY JANNI 💥🎁';
+      blowText.style.position = 'fixed';
+      blowText.style.top = '45%';
+      blowText.style.left = '50%';
+      blowText.style.transform = 'translate(-50%, -50%) scale(0.2)';
+      blowText.style.fontSize = '2.8rem';
+      blowText.style.fontWeight = 'bold';
+      blowText.style.fontFamily = "'Poppins', sans-serif";
+      blowText.style.background = 'linear-gradient(45deg, #f6d365, #fda085)';
+      blowText.style.webkitBackgroundClip = 'text';
+      blowText.style.backgroundClip = 'text';
+      blowText.style.color = 'transparent';
+      blowText.style.textShadow = '0 0 10px #fff5b0';
+      blowText.style.whiteSpace = 'nowrap';
+      blowText.style.zIndex = '10001';
+      blowText.style.pointerEvents = 'none';
+      document.body.appendChild(blowText);
+      blowText.animate([
+        { transform: 'translate(-50%, -50%) scale(0.2)', opacity: 0 },
+        { transform: 'translate(-50%, -50%) scale(1.2)', opacity: 1, offset: 0.5 },
+        { transform: 'translate(-50%, -50%) scale(1)', opacity: 1, offset: 0.8 },
+        { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 0 }
+      ], { duration: 1700, easing: 'cubic-bezier(0.2, 0.9, 0.4, 1.1)' }).onfinish = () => blowText.remove();
+    }
+    
+    // add keyframe fall animation
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = `
+      @keyframes fall {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+    
+    giftTrigger.addEventListener('click', () => {
+      if (!exploded) {
+        createFlowersAndLightsAndText();
+      } else {
+        // if already exploded maybe small extra joy but not needed
+        const ripple = document.createElement('div');
+        ripple.innerText = '🎂🎈';
+        ripple.style.position = 'fixed';
+        ripple.style.left = '50%';
+        ripple.style.top = '50%';
+        ripple.style.fontSize = '3rem';
+        ripple.style.animation = 'blossom 0.6s forwards';
+        document.body.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 700);
+      }
+    });
+    
+    // small addition: stickers also on page2/page3 dynamic but we already have on page1, add tiny floating decoration on all pages.
+    function addExtraStickersOnPages() {
+      const stickersArray = ['🎈', '🎂', '🎁', '🌸', '✨', '⭐', '🎉', '🎊'];
+      const pages = [page1, page2, page3];
+      pages.forEach(page => {
+        if(page && !page.hasAttribute('data-stickers')) {
+          for (let i=0; i<6; i++) {
+            const stickerSpan = document.createElement('div');
+            stickerSpan.className = 'sticker';
+            stickerSpan.style.position = 'absolute';
+            stickerSpan.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+            stickerSpan.style.top = Math.random() * 85 + 5 + '%';
+            stickerSpan.style.left = Math.random() * 90 + 2 + '%';
+            stickerSpan.style.animationDuration = 5 + Math.random() * 7 + 's';
+            stickerSpan.style.opacity = 0.5;
+            stickerSpan.innerHTML = stickersArray[Math.floor(Math.random() * stickersArray.length)];
+            page.style.position = 'relative';
+            page.appendChild(stickerSpan);
+          }
+          page.setAttribute('data-stickers', 'true');
+        }
+      });
+    }
+    setTimeout(addExtraStickersOnPages, 100);
+    
+    // preload some random memory pictures are from LoremFlick but they are decorative. best for aesthetic.
+    // Also ensure transition from page2 to page3 is smooth, no glitch.
+    function adjustGiftMessage() {
+      if(page3.style.display === 'flex') {
+        // ensure gift area is ready
+      }
+    }
+    
+    window.addEventListener('load', () => {
+      // make sure page1 is active first
+      showPage(page1);
+    });
+  </script>
+</body>
+</html>
